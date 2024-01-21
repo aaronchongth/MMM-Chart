@@ -8,22 +8,18 @@
  */
 
 Module.register("MMM-Chart", {
-    jsonData: null,
+  jsonData: null,
 
-    defaults: {
-        width       : 200,
-        height      : 200,
-        url: "",
-		    updateInterval: 30000,
-        chartConfig : {}
-    },
-
-    getScripts: function() {
-		return ["modules/" + this.name + "/node_modules/chart.js/dist/Chart.bundle.min.js"];
-	},
+  defaults: {
+    width       : 200,
+    height      : 200,
+    url: "",
+		updateInterval: 30000,
+    chartConfig : {}
+  },
 
 	start: function() {
-        // this.config = Object.assign({}, this.defaults, this.config);
+    // this.config = Object.assign({}, this.defaults, this.config);
 		Log.info("Starting module: " + this.name);
 		this.getJson();
 		this.scheduleUpdate();
@@ -48,31 +44,32 @@ Module.register("MMM-Chart", {
 			// This way we can load the module more than once
 			if (payload.url === this.config.url) {
 				// this.jsonData = payload.data;
-                this.config.chartConfig = payload.data;
+        this.config.chartConfig = payload.data;
+        this.chart.update();
 				this.updateDom(500);
 			}
 		}
 	},
 
 	getDom: function() {
-        // Create wrapper element
-        const wrapperEl = document.createElement("div");
-        wrapperEl.setAttribute("style", "position: relative; display: inline-block;");
+    // Create wrapper element
+    const wrapperEl = document.createElement("div");
+    wrapperEl.setAttribute("style", "position: relative; display: inline-block;");
 
-        // Create chart canvas
-        const chartEl  = document.createElement("canvas");
+    // Create chart canvas
+    const chartEl  = document.createElement("canvas");
 
-        // Init chart.js
-        this.chart = new Chart(chartEl.getContext("2d"), this.config.chartConfig);
+    // Init chart.js
+    this.chart = new Chart(chartEl.getContext("2d"), this.config.chartConfig);
 
-        // Set the size
-        chartEl.width  = this.config.width;
-            chartEl.height = this.config.height;
-        chartEl.setAttribute("style", "display: block;");
+    // Set the size
+    chartEl.width  = this.config.width;
+    chartEl.height = this.config.height;
+    chartEl.setAttribute("style", "display: block;");
 
-        // Append chart
-        wrapperEl.appendChild(chartEl);
+    // Append chart
+    wrapperEl.appendChild(chartEl);
 
-        return wrapperEl;
+    return wrapperEl;
 	}
 });
